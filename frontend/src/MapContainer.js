@@ -194,8 +194,8 @@ class MapContainer extends Component {
         document.getElementById("new-garden-textbox").style.display = 'none';
         document.getElementById("garden-name").style.display = null;
         document.getElementById("garden-name").innerHTML = "Garden Name: " + MapContainer.gardens[MapContainer.focusedGarden].name;
-        document.getElementById("member-count").style.display = null;
-        document.getElementById("plants-list").innerHTML = "Plants: " + MapContainer.prettyPrintPlants(MapContainer.getPlantsListForGardenFromDatabase(MapContainer.gardenId));
+        // document.getElementById("member-count").style.display = null;
+        // document.getElementById("plants-list").innerHTML = "Plants: " + MapContainer.prettyPrintPlants(MapContainer.getPlantsListForGardenFromDatabase(MapContainer.gardenId));
 
         MapContainer.buildPlantsTable({});
     }
