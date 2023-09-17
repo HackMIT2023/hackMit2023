@@ -1,4 +1,5 @@
 import './App.css';
+import Email from './Email';
 import MapContainer from "./MapContainer";
 import plot from "./plot_no_background.png";
 
@@ -28,6 +29,7 @@ function App() {
             <div className='back-button-container'>
               <button className='back-button' id='back-button' onClick={MapContainer.backToMapCallback}>Back</button>
             </div>
+            <Email />
           </div>
           <MapContainer id='google-map-main' />
         </div>

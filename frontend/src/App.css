@@ -59,6 +59,8 @@
   margin-bottom: 20px;
 }
 
+.email-button,
+.email-submit-button,
 .confirm-button,
 .back-button,
 .join-button,
@@ -68,6 +70,19 @@
   border: none;
   padding: 10px 20px;
   cursor: pointer;
+}
+
+.email-button {
+  margin-right: 13px;
+}
+
+.email-button::placeholder {
+  color: rgba(255, 255, 255, 0.546);
+}
+
+.reminder-email {
+  display: block;
+  padding-bottom: 5px;
 }
 
 #new-garden-textbox {
