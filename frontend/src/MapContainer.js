@@ -122,7 +122,7 @@ class MapContainer extends Component {
   }
 
   render() {
-    return <div ref={this.mapRef} style={{ width: '100%', height: '400px' }} />;
+    return <div ref={this.mapRef} id="Map-Container" />;
   }
 }
 
