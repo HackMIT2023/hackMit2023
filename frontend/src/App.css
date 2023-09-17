@@ -59,6 +59,12 @@
   margin-bottom: 20px;
 }
 
+#plants-table {
+  margin: 0 auto;
+}
+
+.email-button,
+.email-submit-button,
 .confirm-button,
 .back-button,
 .join-button,
@@ -68,6 +74,31 @@
   border: none;
   padding: 10px 20px;
   cursor: pointer;
+}
+
+.email-button {
+  margin-right: 13px;
+}
+
+.email-button::placeholder {
+  color: rgba(255, 255, 255, 0.546);
+}
+
+.reminder-email {
+  display: block;
+  padding-bottom: 5px;
+}
+
+#new-garden-textbox {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+#new-garden-textbox::placeholder {
+  color: rgba(255, 255, 255, 0.546);
 }
 
 .join-button:hover,
