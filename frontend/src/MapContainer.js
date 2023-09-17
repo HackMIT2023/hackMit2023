@@ -392,6 +392,23 @@ class MapContainer extends Component {
     }
     return gardens;
   }
+
+  static loadPlantTypesFromDatabase() {
+    var plantTypes = {};
+    const stmt = MapContainer.db.prepare("SELECT * FROM PlantTypes");
+    stmt.getAsObject({});
+    stmt.bind({});
+    while(stmt.step()) {
+      const row = stmt.getAsObject();
+      plantTypes[row["PlantTypeID"]] = {
+        name: row["PlantName"],
+        frequency: row["Frequency"],
+        daysPerWater: row["DaysPerWater"]
+      }
+    }
+    return plantTypes;
+  }
+
   static getUsersListForGardenFromDatabase(gardenId) {
     var users = {};
     const stmt = MapContainer.db.prepare("SELECT * FROM Users WHERE GardenID = $id");
@@ -439,6 +456,17 @@ class MapContainer extends Component {
     return null;
   }
 
+  static addPlantToDatabase(plantTypeId, gardenId) {
+    var dt = new Date();
+
+    let sqlstr = `INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID)
+    VALUES
+    ('${crypto.randomUUID()}', '${plantTypeId}', '${dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate()}', '${gardenId}')`;
+    console.log(sqlstr);
+    MapContainer.db.run(sqlstr);
+    MapContainer.buildPlantsTable();
+  }
+
   static prettyPrintPlants(plants) {
     var retString = "";
     var plantNames = [];
@@ -463,6 +491,19 @@ class MapContainer extends Component {
       document.getElementById("plants-table").innerHTML += `<tr><td>${plantType["name"]}</td><td>${plantType["frequency"]}</td><td><input type="checkbox" id="plant-table.${plantId}"/></td></tr>`
       
     }
+
+    window.addNewPlant = () => {
+      MapContainer.addPlantToDatabase(document.getElementById("new-plant-select").value,this.focusedGarden);
+      MapContainer.buildPlantsTable();
+    }
+
+    document.getElementById("plants-table").innerHTML += `<tr><td><select id="new-plant-select"></select></td><td><button onClick=addNewPlant()>Add</button></td><td>N/A</td></tr>`
+
+    var plantTypes = MapContainer.loadPlantTypesFromDatabase();
+    for (var plantTypeId in plantTypes) {
+      document.getElementById("new-plant-select").innerHTML += `<option value="${plantTypeId}">${plantTypes[plantTypeId]["name"]}</option>`
+    }
+
     for (var plantId in plants) {
       var plantType = MapContainer.getPlantTypeFromDatabase(plants[plantId]["plantTypeId"]);
       var lastWatered = Date.parse(plants[plantId]["lastWatered"]);
