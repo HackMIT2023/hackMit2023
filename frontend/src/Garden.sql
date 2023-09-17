@@ -1,0 +1,43 @@
+DROP DATABASE IF EXISTS GardenApp;
+CREATE DATABASE GardenApp;
+USE GardenApp;
+
+DROP TABLE IF EXISTS PlantType;
+DROP TABLE IF EXISTS Garden;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Plant;
+
+CREATE TABLE PlantType
+(
+    PlantName VARCHAR(20) NOT NULL,
+    PlantTypeID VARCHAR(36) NOT NULL,
+    Frequency VARCHAR(50) NOT NULL,
+    DaysPerWater INT NOT NULL
+);
+
+CREATE TABLE Garden
+(
+    GardenID VARCHAR(36) PRIMARY KEY,
+    GardenName VARCHAR(20) NOT NULL,
+    JsonPolygon VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Users
+(
+    UserID VARCHAR(36) PRIMARY KEY,
+    First_Name VARCHAR(20) NOT NULL,
+    Last_Name VARCHAR(20) NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    GardenID VARCHAR(36) NOT NULL,
+    FOREIGN KEY (GardenID) REFERENCES Garden(GardenID)
+);
+
+CREATE TABLE Plant
+(
+    PlantID VARCHAR(36) PRIMARY KEY,
+    PlantTypeID VARCHAR(36) NOT NULL,
+    LastWatered DATE NOT NULL,
+    GardenID VARCHAR(36) NOT NULL,
+    FOREIGN KEY (PlantTypeID) REFERENCES PlantType(PlantTypeID),
+    FOREIGN KEY (GardenID) REFERENCES Garden(GardenID)
+);
