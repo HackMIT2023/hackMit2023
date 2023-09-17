@@ -192,6 +192,11 @@ class MapContainer extends Component {
         document.getElementById("create-button").style.display = 'none';
         document.getElementById("more-info-label").style.display = 'none';
         document.getElementById("new-garden-textbox").style.display = 'none';
+        document.getElementById("garden-name").style.display = null;
+        document.getElementById("garden-name").innerHTML = "Garden Name: " + MapContainer.gardens[MapContainer.focusedGarden].name;
+        document.getElementById("member-count").style.display = null;
+        document.getElementById("plants-list").innerHTML = "Plants: " + MapContainer.prettyPrintPlants(MapContainer.getPlantsListForGardenFromDatabase(MapContainer.gardenId));
+
         MapContainer.buildPlantsTable({});
     }
   }
@@ -462,9 +467,8 @@ class MapContainer extends Component {
     let sqlstr = `INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID)
     VALUES
     ('${crypto.randomUUID()}', '${plantTypeId}', '${dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate()}', '${gardenId}');`;
-    console.log(sqlstr);
+    // console.log(sqlstr);
     MapContainer.db.run(sqlstr);
-    MapContainer.buildPlantsTable();
   }
 
   static prettyPrintPlants(plants) {
@@ -494,7 +498,7 @@ class MapContainer extends Component {
 
     window.addNewPlant = () => {
       MapContainer.addPlantToDatabase(document.getElementById("new-plant-select").value,this.focusedGarden);
-      MapContainer.buildPlantsTable();
+      MapContainer.buildPlantsTable(MapContainer.getPlantsListForGardenFromDatabase(MapContainer.focusedGarden));
     }
 
     document.getElementById("plants-table").innerHTML += `<tr><td><select id="new-plant-select"></select></td><td><button onClick=addNewPlant()>Add</button></td><td>N/A</td></tr>`
