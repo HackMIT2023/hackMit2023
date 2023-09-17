@@ -74,6 +74,18 @@
   background-color: #0056b3;
 }
 
+.plot-image {
+  width: 50%;
+  height: auto;
+  margin-right: 20px;
+}
+
+.plot-name {
+  font-size: 72px; 
+  font-weight: bold;
+  font-family: Georgia;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

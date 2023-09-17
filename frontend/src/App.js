@@ -1,5 +1,6 @@
 import './App.css';
-import MapContainer from "./MapContainer"
+import MapContainer from "./MapContainer";
+import plot from "./plot_no_background.png";
 
 function App() {
   return (
