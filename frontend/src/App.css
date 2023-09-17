@@ -28,6 +28,30 @@
   color: #61dafb;
 }
 
+.black-container {
+  background-color: black;
+  color: white; /* Set the text color to white */
+  padding: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 25%;
+  z-index: 1; /* Place it above the map */
+}
+
+.join-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.join-button:hover {
+  background-color: #0056b3;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
