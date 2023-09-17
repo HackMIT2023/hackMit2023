@@ -84,7 +84,7 @@ class MapContainer extends Component {
   }
 
   static newGardenCallback() {
-    if (MapContainer.mapState == "wandering") {
+    if (MapContainer.mapState === "wandering") {
       MapContainer.mapState = "creating";
 
         var mapCenter = MapContainer.map.getCenter()
@@ -118,7 +118,7 @@ class MapContainer extends Component {
   }
 
   static confirmCallback() {
-    if (MapContainer.mapState == "creating") {
+    if (MapContainer.mapState === "creating") {
         var poly = MapContainer.LatLngArrayToLatLngLiteralArray(MapContainer.creatingPolygon.getPath().getArray());
         let uuid = crypto.randomUUID();
         MapContainer.gardens[uuid] = {
@@ -133,7 +133,7 @@ class MapContainer extends Component {
   }
 
   static backToMapCallback() {
-    if (MapContainer.mapState == "focused") {
+    if (MapContainer.mapState === "focused") {
       MapContainer.focusedGarden = null;
       MapContainer.mapState = "wandering";
       MapContainer.enableMovement();
