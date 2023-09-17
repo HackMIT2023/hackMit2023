@@ -59,6 +59,10 @@
   margin-bottom: 20px;
 }
 
+#plants-table {
+  margin: 0 auto;
+}
+
 .email-button,
 .email-submit-button,
 .confirm-button,
