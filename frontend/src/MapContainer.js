@@ -21,6 +21,8 @@ class MapContainer extends Component {
   static gardens = MapContainer.loadGardensFromDatabase();
   static map;
 
+  static numbers = [1, 2, 3, 4, 5];
+
   componentDidMount() {
     // Load the Google Maps JavaScript API script
     const mapsScript = document.createElement('script');
@@ -39,6 +41,7 @@ class MapContainer extends Component {
     document.getElementById("member-count").style.display = 'none';
     document.getElementById("plants-list").style.display = 'none';
     document.getElementById("new-garden-textbox").style.display = 'none';
+    document.getElementById("plants-table").style.display = 'none';
   }
 
   initMap = () => {
@@ -90,6 +93,7 @@ class MapContainer extends Component {
   }
 
   static newGardenCallback() {
+    MapContainer.numbers.push(6);
     if (MapContainer.mapState === "wandering") {
       MapContainer.mapState = "creating";
 
@@ -158,10 +162,11 @@ class MapContainer extends Component {
     if (MapContainer.mapState === "focused") {
       MapContainer.mapState = "joined";
       document.getElementById("join-button").style.display = 'none';
-        document.getElementById("confirm-button").style.display = 'none';
-        document.getElementById("back-button").style.display = 'none';
-        document.getElementById("create-button").style.display = 'none';
-        document.getElementById("more-info-label").style.display = 'none';
+      document.getElementById("confirm-button").style.display = 'none';
+      document.getElementById("back-button").style.display = 'none';
+      document.getElementById("create-button").style.display = 'none';
+      document.getElementById("more-info-label").style.display = 'none';
+      MapContainer.buildPlantsTable(MapContainer.getPlantsListForGardenFromDatabase(MapContainer.focusedGarden));
     }
   }
 
@@ -174,6 +179,7 @@ class MapContainer extends Component {
             name: document.getElementById("new-garden-textbox").value
         };
 
+        MapContainer.focusedGarden = uuid;
         MapContainer.addGardenToMap(uuid);
         MapContainer.creatingPolygon.setMap(null);
         MapContainer.creatingPolygon = null;
@@ -186,6 +192,7 @@ class MapContainer extends Component {
         document.getElementById("create-button").style.display = 'none';
         document.getElementById("more-info-label").style.display = 'none';
         document.getElementById("new-garden-textbox").style.display = 'none';
+        MapContainer.buildPlantsTable({});
     }
   }
 
@@ -447,6 +454,31 @@ class MapContainer extends Component {
       }
     }
     return retString;
+  }
+
+  static buildPlantsTable(plants) {
+    document.getElementById("plants-table").innerHTML = `<tr><th>Plant</th><th>Frequency</th><th>Watered</th></tr>`;
+    for (var plantId in plants) {
+      var plantType = MapContainer.getPlantTypeFromDatabase(plants[plantId]["plantTypeId"]);
+      document.getElementById("plants-table").innerHTML += `<tr><td>${plantType["name"]}</td><td>${plantType["frequency"]}</td><td><input type="checkbox" id="plant-table.${plantId}"/></td></tr>`
+      
+    }
+    for (var plantId in plants) {
+      var plantType = MapContainer.getPlantTypeFromDatabase(plants[plantId]["plantTypeId"]);
+      var lastWatered = Date.parse(plants[plantId]["lastWatered"]);
+      var nextWatering = lastWatered + (plantType["daysPerWater"] * 86400000);
+      var needsWatering = (Date.now() - lastWatered) < (plantType["daysPerWater"] * 86400000);
+      if (!needsWatering) {
+        document.getElementById("plant-table." + plantId).checked = true;
+        document.getElementById("plant-table." + plantId).disabled = "disabled";
+      }
+    }
+
+    document.getElementById("plants-table").style.display = null;
+
+    // const tableItems = MapContainer.numbers.map((number) =>
+    //   <tr><td><input type="checkbox" /></td><td>{number}</td></tr>
+    // );
   }
 
   static CoordJsonToLatLngLiteralArray(jsonString) {
