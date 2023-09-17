@@ -2,9 +2,19 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
-      <option name="id" value="snapshots" />
-      <option name="name" value="libs-snapshots" />
-      <option name="url" value="https://artifactory-prd.jbhunt.com:8081/artifactory/libs-snapshots" />
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="a18a4108-41a5-4a46-94af-20fdcadfb06f" />
+      <option name="name" value="a18a4108-41a5-4a46-94af-20fdcadfb06f" />
+      <option name="url" value="https://mvnrepository.com/artifact/com.google.firebase/firebase-database" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="7113a3e4-849f-4df1-8173-bed28679a412" />
+      <option name="name" value="7113a3e4-849f-4df1-8173-bed28679a412" />
+      <option name="url" value="https://firebase.google.com/android/repository" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -15,11 +25,6 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="central" />
-      <option name="name" value="libs-releases" />
-      <option name="url" value="https://artifactory-prd.jbhunt.com:8081/artifactory/libs-releases" />
     </remote-repository>
   </component>
 </project>
