@@ -461,7 +461,7 @@ class MapContainer extends Component {
 
     let sqlstr = `INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID)
     VALUES
-    ('${crypto.randomUUID()}', '${plantTypeId}', '${dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate()}', '${gardenId}')`;
+    ('${crypto.randomUUID()}', '${plantTypeId}', '${dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate()}', '${gardenId}');`;
     console.log(sqlstr);
     MapContainer.db.run(sqlstr);
     MapContainer.buildPlantsTable();
