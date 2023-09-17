@@ -50,8 +50,8 @@ VALUES
     ('4', 'Garden4', '[[.30,.30],[.30,.40],[.40,.40],[.40,.30]]'),
     ('5', 'Garden5', '[[.40,.40],[.40,.50],[.50,.50],[.50,.40]]');
 
-INSERT INTO PlantType(PlantTypeID, PlantName, Frequency, DaysPerWater) 
-VALUES 
+INSERT INTO PlantType(PlantTypeID, PlantName, Frequency, DaysPerWater)
+VALUES
     ('1', 'Tomato', 'Daily', 1),
     ('2', 'Cucumber', 'Daily', 1),
     ('3', 'Carrot', 'Daily', 1),
@@ -87,7 +87,7 @@ VALUES
     ('10', '11', '2023-09-14', '1'),
     ('11', '4', '2023-09-14', '1'),
     ('12', '10', '2023-09-13', '1'),
-    -- 
+    --
     ('13', '1', '2023-09-16', '2'),
     ('14', '7', '2023-09-15', '2'),
     ('15', '6', '2023-09-16', '2'),
@@ -95,14 +95,14 @@ VALUES
     ('17', '5', '2023-09-15', '2'),
     ('18', '3', '2023-09-15', '2'),
     ('19', '4', '2023-09-15', '2'),
-    -- 
+    --
     ('20', '1', '2023-09-16', '3'),
     ('21', '11', '2023-09-15', '3'),
     ('22', '12', '2023-09-16', '3'),
-    -- 
+    --
     ('23', '1', '2023-09-16', '4'),
     ('24', '1', '2023-09-15', '4'),
-    -- 
+    --
     ('25', '10', '2023-09-10', '5'),
     ('26', '10', '2023-09-11', '5'),
     ('27', '10', '2023-09-9', '5'),
@@ -111,16 +111,19 @@ VALUES
 
 CREATE FUNCTION AddPlant(RandomPlantID VARCHAR(36), PlantType VARCHAR(36), DateWatered VARCHAR(36), GardenID VARCHAR(36))
 RETURNS VARCHAR(36)
+DETERMINISTIC
 BEGIN
-    INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID) VALUES (RandomPlantID, PlantType, DateWatered, GardenID); 
-    RETURN RandomPlantID; 
+    INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID) VALUES (RandomPlantID, PlantType, DateWatered, GardenID);
+    RETURN RandomPlantID;
 END;
 
 CREATE FUNCTION Water(PlantIDToUpdate VARCHAR(36), DateWatered VARCHAR(36))
 RETURNS VARCHAR(36)
+DETERMINISTIC
 BEGIN
     UPDATE Plants SET LastWatered = DateWatered WHERE PlantID = PlantIDToUpdate;
     RETURN PlantIDToUpdate;
 END;
 
-INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID) VALUES ('99', '12', '2023-09-16', '3')
+SELECT AddPlant('99', '12', '2023-09-14', '3');
+SELECT Water('99', '2023-09-16');
