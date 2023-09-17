@@ -9,6 +9,10 @@ function App() {
         <div className='join-button-container'>
           <button className='join-button'>Join Garden</button>
         </div>
+
+        <div className='add-button-container'>
+          <button className='add-button'>Create Garden</button>
+        </div>
       </div>
       
       <main>

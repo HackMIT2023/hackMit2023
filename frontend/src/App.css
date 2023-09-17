@@ -35,17 +35,24 @@
 
 .black-container {
   background-color: black;
-  color: white; /* Set the text color to white */
+  color: white;
   padding: 20px;
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 25%;
-  z-index: 1; /* Place it above the map */
+  z-index: 1;
 }
 
-.join-button {
+.join-button-container,
+.add-button-container {
+  margin-top: auto;
+  margin-bottom: 20px;
+}
+
+.join-button,
+.add-button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -53,7 +60,8 @@
   cursor: pointer;
 }
 
-.join-button:hover {
+.join-button:hover,
+.add-button:hover {
   background-color: #0056b3;
 }
 
