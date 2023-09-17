@@ -13,6 +13,11 @@
   }
 }
 
+#Map-Container {
+  height: 100vh;
+  width: 75vw ;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
