@@ -1,32 +1,30 @@
 import React, { Component } from 'react';
 
 class MapContainer extends Component {
+  static mapRef = React.createRef();
+  static returnZoom = 12;
+  static mapState = "wandering"; // "wandering", "creating", "focused"
+  static focusedGarden = null;
+  static creatingPolygon = null;
+  static homeCoords = {
+    lat: 42.35942459106445,
+    lng: -71.09184265136719
+  }
+  static gardens = {
+    "bf6763ac-3983-42ad-81ce-a662e996c33a" : {
+      poly: [
+          { lat: 42.35942459106445, lng: -71.09184265136719 },
+          { lat: 42.36942459106445, lng: -71.09184265136719 },
+          { lat: 42.36942459106445, lng: -71.10184265136719 },
+          { lat: 42.35942459106445, lng: -71.10184265136719 }
+      ],
+      name: "My Test Garden"
+    }
+  }
+  static map;
+
   constructor(props) {
     super(props);
-    this.mapRef = React.createRef();
-
-    this.returnZoom = 12;
-    this.mapState = "wandering"; // "wandering", "creating", "focused"
-    this.focusedGarden = null;
-    this.creatingPolygon = null;
-  
-    this.homeCoords = {
-      lat: 42.35942459106445,
-      lng: -71.09184265136719
-    }
-  
-    this.gardens = {
-      "bf6763ac-3983-42ad-81ce-a662e996c33a" : {
-        poly: [
-            { lat: 42.35942459106445, lng: -71.09184265136719 },
-            { lat: 42.36942459106445, lng: -71.09184265136719 },
-            { lat: 42.36942459106445, lng: -71.10184265136719 },
-            { lat: 42.35942459106445, lng: -71.10184265136719 }
-        ],
-        name: "My Test Garden"
-      }
-    }
-
   }
 
   componentDidMount() {
@@ -41,9 +39,9 @@ class MapContainer extends Component {
 
   initMap = () => {
     // Initialize the map
-    this.map = new window.google.maps.Map(this.mapRef.current, {
-      zoom: this.returnZoom,
-      center: this.homeCoords,
+    MapContainer.map = new window.google.maps.Map(MapContainer.mapRef.current, {
+      zoom: MapContainer.returnZoom,
+      center: MapContainer.homeCoords,
       fullscreenControl: false,
       zoomControl: false,
       streetViewControl: false,
@@ -53,15 +51,15 @@ class MapContainer extends Component {
       mapTypeControl: false
     });
 
-    for (var gardenId in this.gardens) {
-      this.addGardenToMap(gardenId);
+    for (var gardenId in MapContainer.gardens) {
+      MapContainer.addGardenToMap(gardenId);
     }
   };
 
-  addGardenToMap(gardenId) {
+  static addGardenToMap(gardenId) {
     // Construct the polygon.
     const newPolygon = new window.google.maps.Polygon({  
-        paths: this.gardens[gardenId].poly,
+        paths: MapContainer.gardens[gardenId].poly,
         strokeColor: "#00AA00",
         strokeOpacity: 0.8,
         strokeWeight: 2,
@@ -69,35 +67,94 @@ class MapContainer extends Component {
         fillOpacity: 0.35
     });
 
-    newPolygon.setMap(this.map);
+    newPolygon.setMap(MapContainer.map);
 
     newPolygon.addListener('click', function (event) {
-        if (this.mapState === "wandering") {
-            this.returnZoom = this.map.getZoom();
+        if (MapContainer.mapState === "wandering") {
+          MapContainer.returnZoom = MapContainer.map.getZoom();
 
-            var polyBounds = this.getPolygonBounds(this.gardens[gardenId].poly)
-            this.map.fitBounds(polyBounds);
+            var polyBounds = MapContainer.getPolygonBounds(MapContainer.gardens[gardenId].poly)
+            MapContainer.map.fitBounds(polyBounds);
 
-            this.mapState = "focused";
-            this.focusedGarden = gardenId;
-            this.disableMovement()
+            MapContainer.mapState = "focused";
+            MapContainer.focusedGarden = gardenId;
+            MapContainer.disableMovement()
         }
     }.bind(this));  
   }
 
-  enableMovement() {
+  static newGardenCallback() {
+    if (MapContainer.mapState == "wandering") {
+      MapContainer.mapState = "creating";
+
+        var mapCenter = MapContainer.map.getCenter()
+
+        var mapNorthEast = MapContainer.LatLngToLatLngLiteral(MapContainer.map.getBounds().getNorthEast())
+        var mapSouthWest = MapContainer.LatLngToLatLngLiteral(MapContainer.map.getBounds().getSouthWest())
+        var viewportHeight = mapNorthEast.lat - mapSouthWest.lat;
+        var viewportWidth = mapSouthWest.lng - mapNorthEast.lng;
+        var defaultWidth = viewportWidth * 1/3;
+        var defaultHeight = viewportHeight * 1/3;
+
+        const poly = [
+            {lat: mapCenter.lat() - defaultHeight/2, lng: mapCenter.lng() + defaultWidth/2},
+            {lat: mapCenter.lat() + defaultHeight/2, lng: mapCenter.lng() + defaultWidth/2},
+            {lat: mapCenter.lat() + defaultHeight/2, lng: mapCenter.lng() - defaultWidth/2},
+            {lat: mapCenter.lat() - defaultHeight/2, lng: mapCenter.lng() - defaultWidth/2}
+        ]
+        MapContainer.creatingPolygon = new window.google.maps.Polygon({
+            paths: poly,
+            strokeColor: "#AA0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35,
+            editable: true,
+            draggable: true,
+        });
+        MapContainer.creatingPolygon.setMap(MapContainer.map);
+        
+    }
+  }
+
+  static confirmCallback() {
+    if (MapContainer.mapState == "creating") {
+        var poly = MapContainer.LatLngArrayToLatLngLiteralArray(MapContainer.creatingPolygon.getPath().getArray());
+        let uuid = crypto.randomUUID();
+        MapContainer.gardens[uuid] = {
+            poly: poly,
+            name: "New garden"
+        };
+        MapContainer.addGardenToMap(uuid);
+        MapContainer.creatingPolygon.setMap(null);
+        MapContainer.creatingPolygon = null;
+        MapContainer.mapState = "wandering";
+    }
+  }
+
+  static backToMapCallback() {
+    if (MapContainer.mapState == "focused") {
+      MapContainer.focusedGarden = null;
+      MapContainer.mapState = "wandering";
+      MapContainer.enableMovement();
+      MapContainer.map.setZoom(MapContainer.returnZoom);
+    }
+
+}
+
+  static enableMovement() {
     this.map.setOptions({ scrollwheel: true, scaleControl: true, disableDoubleClickZoom: false, draggable: true, panControl: true});
   }
 
-  disableMovement() {
+  static disableMovement() {
     this.map.setOptions({ scrollwheel: false, scaleControl: false, disableDoubleClickZoom: true, draggable: false, panControl: false});
   }
 
-  LatLngToLatLngLiteral(latLng) {
+  static LatLngToLatLngLiteral(latLng) {
     return {lat:latLng.lat(),lng:latLng.lng()}
   }
 
-  LatLngArrayToLatLngLiteralArray(latLngArray) {
+  static LatLngArrayToLatLngLiteralArray(latLngArray) {
     var latLngLiteralArray = [];
     for (let i = 0; i < latLngArray.length; i++) {
         latLngLiteralArray[i] = this.LatLngToLatLngLiteral(latLngArray[i])
@@ -105,7 +162,7 @@ class MapContainer extends Component {
     return latLngLiteralArray
   }
 
-  getPolygonBounds(poly) {
+  static getPolygonBounds(poly) {
     var bounds = {
         north: -Number.MAX_VALUE,
         south: Number.MAX_VALUE,
@@ -122,8 +179,9 @@ class MapContainer extends Component {
   }
 
   render() {
-    return <div ref={this.mapRef} id="Map-Container" />;
+    return <div ref={MapContainer.mapRef} id="Map-Container" />;
   }
+
 }
 
 export default MapContainer;

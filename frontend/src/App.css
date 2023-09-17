@@ -18,6 +18,11 @@
   width: 75vw ;
 }
 
+.flexbox-container {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -45,12 +50,16 @@
   z-index: 1;
 }
 
+.confirm-button-container,
+.back-button-container,
 .join-button-container,
 .add-button-container {
   margin-top: auto;
   margin-bottom: 20px;
 }
 
+.confirm-button,
+.back-button,
 .join-button,
 .add-button {
   background-color: #007bff;
