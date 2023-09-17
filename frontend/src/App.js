@@ -15,6 +15,7 @@ function App() {
             <p id = "member-count"></p>
             <p id = "plants-list"></p>
             <p><input type="text" id="new-garden-textbox" placeholder="Garden Name" /></p>
+            <table id="plants-table"></table>
             <div className='join-button-container'>
               <button className='join-button' id='join-button' onClick={MapContainer.joinCallback}>Join Garden</button>
             </div>
