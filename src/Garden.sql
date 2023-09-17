@@ -32,7 +32,7 @@ CREATE TABLE Users
     FOREIGN KEY (GardenID) REFERENCES Garden(GardenID)
 );
 
-CREATE TABLE Plant
+CREATE TABLE Plants
 (
     PlantID VARCHAR(36) PRIMARY KEY,
     PlantTypeID VARCHAR(36) NOT NULL,
@@ -73,7 +73,7 @@ VALUES
     ('4', 'Sally', 'Smith', 'sally@school.edu', '1'),
     ('5', 'Joe', 'Smith', 'joe@school.edu', '4');
 
-INSERT INTO Plant(PlantID, PlantTypeID, LastWatered, GardenID)
+INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID)
 VALUES
     ('1', '1', '2023-09-16', '1'),
     ('2', '1', '2023-09-15', '1'),
@@ -108,3 +108,19 @@ VALUES
     ('27', '10', '2023-09-9', '5'),
     ('28', '10', '2023-09-8', '5'),
     ('29', '10', '2023-09-9', '5');
+
+CREATE FUNCTION AddPlant(RandomPlantID VARCHAR(36), PlantType VARCHAR(36), DateWatered VARCHAR(36), GardenID VARCHAR(36))
+RETURNS VARCHAR(36)
+BEGIN
+    INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID) VALUES (RandomPlantID, PlantType, DateWatered, GardenID); 
+    RETURN RandomPlantID; 
+END;
+
+CREATE FUNCTION Water(PlantIDToUpdate VARCHAR(36), DateWatered VARCHAR(36))
+RETURNS VARCHAR(36)
+BEGIN
+    UPDATE Plants SET LastWatered = DateWatered WHERE PlantID = PlantIDToUpdate;
+    RETURN PlantIDToUpdate;
+END;
+
+INSERT INTO Plants(PlantID, PlantTypeID, LastWatered, GardenID) VALUES ('99', '12', '2023-09-16', '3')
