@@ -58,6 +58,8 @@
   margin-bottom: 20px;
 }
 
+.email-button,
+.email-submit-button,
 .confirm-button,
 .back-button,
 .join-button,
@@ -67,6 +69,15 @@
   border: none;
   padding: 10px 20px;
   cursor: pointer;
+}
+
+.email-button {
+  margin-right: 13px;
+}
+
+.reminder-email {
+  display: block;
+  padding-bottom: 5px;
 }
 
 .join-button:hover,
